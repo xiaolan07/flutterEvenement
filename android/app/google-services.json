@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "686444373137",
+    "firebase_url": "https://fete-de-la-sience-default-rtdb.firebaseio.com",
+    "project_id": "fete-de-la-sience",
+    "storage_bucket": "fete-de-la-sience.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:686444373137:android:565e49342170bbbd390b30",
+        "android_client_info": {
+          "package_name": "com.example.flutter_dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "686444373137-l4e9rguhqivsovk597srfa66elh3aavs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdHfu0gHVlFh4fi8S17eO5k_ZVJZ64q4g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "686444373137-l4e9rguhqivsovk597srfa66elh3aavs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "686444373137-78jubvt6vuvhanot5h9nj25tf67hndkj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterDev.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

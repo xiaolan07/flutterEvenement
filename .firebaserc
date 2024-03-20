@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "fete-de-la-sience",
+    "fete": "fete-de-la-sience"
+  },
+  "targets": {},
+  "etags": {}
+}
