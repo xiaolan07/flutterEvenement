@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dev/service/firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'model/eventModel.dart';
 
@@ -103,10 +104,10 @@ class EventDetailsPage extends StatelessWidget {
                 style: TextStyle(fontSize: 16.0),
               ),
               SizedBox(height: 16.0),
-              Text(
+              const Text(
                 'Partagez le lien de l article sur vos réseaux sociaux 🔥 ! ',
                 style: 
-                const TextStyle(
+                TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -139,7 +140,69 @@ class EventDetailsPage extends StatelessWidget {
                     onPressed: () => _shareOnLinkedIn(event.lien),
                   ),
                 ],
+              ),
+             Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Notez cet événement",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      RatingBar.builder(
+                        initialRating: 3,
+                        minRating: 1,
+                        maxRating: 5,
+                        itemCount: 5,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 4),
+                        itemBuilder: (context, index) {
+                          switch (index) {
+                            case 0:
+                              return const Icon(
+                                Icons.sentiment_dissatisfied,
+                                color: Colors.red,
+                              );
+                            case 1:
+                              return const Icon(
+                                Icons.sentiment_dissatisfied,
+                                color: Colors.orange,
+                              );
+                            case 2:
+                              return const Icon(
+                                Icons.sentiment_neutral,
+                                color: Colors.amber,
+                              );
+                            case 3:
+                              return const Icon(
+                                Icons.sentiment_satisfied,
+                                color: Colors.lightGreen,
+                              );
+                            case 4:
+                              return const Icon(
+                                Icons.sentiment_satisfied,
+                                color: Colors.blue,
+                              );
+                            default:
+                              return Text("");
+                          }
+                        },
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "Note moyenne : 3/5",
+                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ],
               )
+
             ],
           ),
         ),

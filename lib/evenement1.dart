@@ -291,7 +291,7 @@ void _showFilterByKeywordsDialog() {
                         return ListTile(
                           title: Text(
                             //'${event.titreFr} Ville: ${firestoreService.extractCityFromAddress(event.adresse)}',
-                            '${event.titreFr} Ville: ${event.ville} Geolocalisation: ${event.geolocalisation.join(',')}' ,
+                            '${event.titreFr} Ville: ${event.ville}' , // Geolocalisation: ${event.geolocalisation.join(',')}
                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           subtitle: Column(
