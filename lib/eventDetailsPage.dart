@@ -67,9 +67,19 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                   Icon(Icons.location_on, color: Colors.grey),
                   SizedBox(width: 8.0),
                   Expanded(
-                    child: Text(
-                      "Address: ${widget.event.adresse}",
-                      style: TextStyle(color: Colors.grey),
+                    child: InkWell(
+                      onTap: () async {
+                        final url = 'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(widget.event.adresse)}';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not launch $url';
+                        }
+                      },
+                      child: Text(
+                        "Address: ${widget.event.adresse}",
+                        style: TextStyle(color: Colors.grey),
+                      ),
                     ),
                   ),
                 ],
