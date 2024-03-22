@@ -1,9 +1,8 @@
-import 'dart:ffi';
+//import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dev/service/firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 
 import 'model/eventModel.dart';
 import 'eventDetailsPage.dart';
@@ -26,19 +25,18 @@ class _Evenement1State extends State<Evenement1> {
   bool _showList = true;
   GoogleMapController? _mapController;
 
-
   @override
   void initState() {
     super.initState();
     _loadEvents();
   }
 
-
   void _toggleView() {
     setState(() {
       _showList = !_showList;
     });
   }
+
   void _loadEvents() async {
     setState(() => _isLoading = true);
     var events = await firestoreService.getAllEvents();
@@ -50,15 +48,16 @@ class _Evenement1State extends State<Evenement1> {
   }
 
   void _getByVilleAndKeywordsAndThematique(String query) {
-  setState(() {
-    filteredEvents = allEvents.where((event) {
-      return event.adresse.toLowerCase().contains(query.toLowerCase()) ||
-          event.thematiques.any((thematique) => thematique.toLowerCase().contains(query.toLowerCase()))||
-          event.keywords.any((keyword) => keyword.toLowerCase().contains(query.toLowerCase()));
-    }).toList();
-  });
-}
-
+    setState(() {
+      filteredEvents = allEvents.where((event) {
+        return event.adresse.toLowerCase().contains(query.toLowerCase()) ||
+            event.thematiques.any((thematique) =>
+                thematique.toLowerCase().contains(query.toLowerCase())) ||
+            event.keywords.any((keyword) =>
+                keyword.toLowerCase().contains(query.toLowerCase()));
+      }).toList();
+    });
+  }
 
   void _filterEventsByDate(DateTime? selectedDate) {
     if (selectedDate != null) {
@@ -68,7 +67,8 @@ class _Evenement1State extends State<Evenement1> {
           DateTime endDate = DateTime.parse(event.dates.last);
           return selectedDate.isAtSameMomentAs(startDate) ||
               selectedDate.isAtSameMomentAs(endDate) ||
-              (selectedDate.isAfter(startDate) && selectedDate.isBefore(endDate));
+              (selectedDate.isAfter(startDate) &&
+                  selectedDate.isBefore(endDate));
         }).toList();
       });
     }
@@ -85,7 +85,9 @@ class _Evenement1State extends State<Evenement1> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text('Filtrer par :', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                Text('Filtrer par :',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
@@ -133,105 +135,105 @@ class _Evenement1State extends State<Evenement1> {
     );
   }
 
-void _showFilterByLocationDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Filtrer par Lieu'),
-        content: TextField(
-          onChanged: (value) {
-            setState(() {
-              filteredEvents = allEvents.where((event) {
-                return event.adresse.toLowerCase().contains(value.toLowerCase());
-              }).toList();
-            });
-          },
-          decoration: InputDecoration(
-            labelText: 'Entrez le lieu',
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop(); // Fermer la vue de filtrage
+  void _showFilterByLocationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Filtrer par Lieu'),
+          content: TextField(
+            onChanged: (value) {
+              setState(() {
+                filteredEvents = allEvents.where((event) {
+                  return event.adresse
+                      .toLowerCase()
+                      .contains(value.toLowerCase());
+                }).toList();
+              });
             },
-            child: Text('Fermer'),
+            decoration: InputDecoration(
+              labelText: 'Entrez le lieu',
+            ),
           ),
-        ],
-      );
-    },
-  );
-}
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Fermer la vue de filtrage
+              },
+              child: Text('Fermer'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-
-
-void _showFilterByThemesDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Filtrer par Thème'),
-        content: TextField(
-          onChanged: (value) {
-            setState(() {
-              filteredEvents = allEvents.where((event) {
-               return event.thematiques.any((thematique) => thematique.toLowerCase().contains(value.toLowerCase()));
-              }).toList();
-            });
-          },
-          decoration: InputDecoration(
-            labelText: 'Entrez le thème',
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop(); // Fermer la vue de filtrage
+  void _showFilterByThemesDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Filtrer par Thème'),
+          content: TextField(
+            onChanged: (value) {
+              setState(() {
+                filteredEvents = allEvents.where((event) {
+                  return event.thematiques.any((thematique) =>
+                      thematique.toLowerCase().contains(value.toLowerCase()));
+                }).toList();
+              });
             },
-            child: Text('Fermer'),
+            decoration: InputDecoration(
+              labelText: 'Entrez le thème',
+            ),
           ),
-        ],
-      );
-    },
-  );
-}
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Fermer la vue de filtrage
+              },
+              child: Text('Fermer'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-
-void _showFilterByKeywordsDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Filtrer par Mots-clés'),
-        content: TextField(
-          onChanged: (value) {
-            setState(() {
-              filteredEvents = allEvents.where((event) {
-                return event.keywords.any((keyword) => keyword.toLowerCase().contains(value.toLowerCase()));
-              }).toList();
-            });
-          },
-          decoration: InputDecoration(
-            labelText: 'Entrez le mot-clé',
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop(); // Fermer la vue de filtrage
+  void _showFilterByKeywordsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Filtrer par Mots-clés'),
+          content: TextField(
+            onChanged: (value) {
+              setState(() {
+                filteredEvents = allEvents.where((event) {
+                  return event.keywords.any((keyword) =>
+                      keyword.toLowerCase().contains(value.toLowerCase()));
+                }).toList();
+              });
             },
-            child: Text('Fermer'),
+            decoration: InputDecoration(
+              labelText: 'Entrez le mot-clé',
+            ),
           ),
-        ],
-      );
-    },
-  );
-}
-
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Fermer la vue de filtrage
+              },
+              child: Text('Fermer'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +241,6 @@ void _showFilterByKeywordsDialog() {
       appBar: AppBar(
         title: Text('Evenements'),
       ),
-     
       body: Column(
         children: [
           Padding(
@@ -253,7 +254,8 @@ void _showFilterByKeywordsDialog() {
                       labelText: 'Rechercher par adresse',
                       suffixIcon: IconButton(
                         icon: Icon(Icons.search),
-                        onPressed: () => _getByVilleAndKeywordsAndThematique(_textEditingController.text),
+                        onPressed: () => _getByVilleAndKeywordsAndThematique(
+                            _textEditingController.text),
                       ),
                     ),
                     onSubmitted: (value) {
@@ -279,49 +281,51 @@ void _showFilterByKeywordsDialog() {
               ),
             ],
           ),
-
-        Expanded(
-          child: _isLoading
-              ? Center(child: CircularProgressIndicator())
-              : _showList
-                  ? ListView.builder(
-                      itemCount: filteredEvents.length,
-                      itemBuilder: (context, index) {
-                        EventModel event = filteredEvents[index];
-                        return ListTile(
-                          title: Text(
-                            //'${event.titreFr} Ville: ${firestoreService.extractCityFromAddress(event.adresse)}',
-                            '${event.titreFr} Ville: ${event.ville}' , // Geolocalisation: ${event.geolocalisation.join(',')}
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Date: ${event.dates.isNotEmpty ? event.dates.first : 'Date non disponible'}'),
-                             // Text('Mots clés: ${event.keywords.join(', ')}', style: TextStyle(fontWeight: FontWeight.bold)),
-                             // Text('Thèmes: ${event.thematiques.join(', ')}', style: TextStyle(color: Colors.blue)),
-                            ],
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EventDetailsPage(event: event),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    )
-                  : _buildMapView(),
-        ),
+          Expanded(
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : _showList
+                    ? ListView.builder(
+                        itemCount: filteredEvents.length,
+                        itemBuilder: (context, index) {
+                          EventModel event = filteredEvents[index];
+                          return ListTile(
+                            title: Text(
+                              //'${event.titreFr} Ville: ${firestoreService.extractCityFromAddress(event.adresse)}',
+                              '${event.titreFr} Ville: ${event.ville}', // Geolocalisation: ${event.geolocalisation.join(',')}
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    'Date: ${event.dates.isNotEmpty ? event.dates.first : 'Date non disponible'}'),
+                                // Text('Mots clés: ${event.keywords.join(', ')}', style: TextStyle(fontWeight: FontWeight.bold)),
+                                // Text('Thèmes: ${event.thematiques.join(', ')}', style: TextStyle(color: Colors.blue)),
+                              ],
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      EventDetailsPage(event: event),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      )
+                    : _buildMapView(),
+          ),
         ],
       ),
     );
   }
 
-Widget _buildMapView() {
-  return GoogleMap(
+  Widget _buildMapView() {
+    return GoogleMap(
       initialCameraPosition: const CameraPosition(
         target: LatLng(49.163128, -0.34709599999999996),
         zoom: 5,
@@ -335,41 +339,37 @@ Widget _buildMapView() {
     );
   }
 
-Set<Marker> _createMarkers() {
+  Set<Marker> _createMarkers() {
     Set<Marker> markers = {}; // Ensemble de marqueurs à retourner
 
     for (EventModel event in filteredEvents) {
       // Extraire les coordonnées de géolocalisation de l'événement
       List<double> coordinates = event.geolocalisation;
-      if (coordinates.length>= 2){
+      if (coordinates.length >= 2) {
         double latitude = coordinates[0];
-      double longitude = coordinates[1];
+        double longitude = coordinates[1];
 
-      // Créer un marqueur pour chaque événement
-      Marker marker = Marker(
-        markerId: MarkerId(event.id.toString()), // Utilisation de l'ID de l'événement comme ID de marqueur
-        position: LatLng( longitude, latitude),
-        infoWindow: InfoWindow(
-          title: event.titreFr,
-          snippet: 'Date: ${event.dates.first}\nVille: ${event.ville}',
-        ),
-        onTap: (){
-          Navigator.push(
-            context, 
-            MaterialPageRoute(
-              builder:  (context) => EventDetailsPage(event: event),
-            )
-          );
-        }
-      );
+        // Créer un marqueur pour chaque événement
+        Marker marker = Marker(
+            markerId: MarkerId(event.id
+                .toString()), // Utilisation de l'ID de l'événement comme ID de marqueur
+            position: LatLng(longitude, latitude),
+            infoWindow: InfoWindow(
+              title: event.titreFr,
+              snippet: 'Date: ${event.dates.first}\nVille: ${event.ville}',
+            ),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventDetailsPage(event: event),
+                  ));
+            });
 
-      markers.add(marker); // Ajouter le marqueur à l'ensemble
+        markers.add(marker); // Ajouter le marqueur à l'ensemble
       }
     }
 
     return markers; // Retourner l'ensemble de marqueurs
   }
-
 }
-
-
