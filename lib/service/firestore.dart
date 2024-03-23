@@ -1,9 +1,15 @@
+import 'dart:async';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_dev/main.dart';
 
 import '../model/eventModel.dart';
+import '../model/parcoursModel.dart';
 
 class FirestoreService {
   DatabaseReference ref = FirebaseDatabase.instance.ref();
+
   // TEST:  recuperer les premières 10 évenements
   Future<List<EventModel>> getAllEvents() async {
     Query allEvents = ref.limitToFirst(30);
@@ -23,6 +29,30 @@ class FirestoreService {
       }
     }
     return events;
+  }
+
+  Future<List<ParcoursModel>> getAllParcours() async {
+    DatabaseReference ref = parcoursBD.ref();
+    DatabaseEvent event = await ref.limitToFirst(30).once();
+    List<ParcoursModel> parcoursList = [];
+
+    if (event.snapshot.exists) {
+      final data = event.snapshot.value;
+      if (data is List) {
+        for (int i = 0; i < data.length; i++) {
+          var value = data[i];
+          if (value is Map) {
+            String id = i.toString();
+            ParcoursModel parcours =
+                ParcoursModel.fromJson(Map<String, dynamic>.from(value), id);
+            parcoursList.add(parcours);
+          }
+        }
+      } else {
+        print("Unexpected data format. Expected a list.");
+      }
+    }
+    return parcoursList;
   }
 
   Future<void> setNote(int idEvent, int note) async {

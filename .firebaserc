@@ -1,7 +1,8 @@
 {
   "projects": {
     "default": "fete-de-la-sience",
-    "fete": "fete-de-la-sience"
+    "fete": "fete-de-la-sience",
+    "parcours": "parcours-e37c3"
   },
   "targets": {},
   "etags": {}
