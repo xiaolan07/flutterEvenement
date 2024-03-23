@@ -68,7 +68,7 @@ class _ParcoursState extends State<Parcours> {
                   leading: Text(allParcours[index].id),
                   title: Text(allParcours[index].titre),
                   subtitle: Text(allParcours[index].pseudo),
-                  trailing: Text(allParcours[index].indexEvents.join(", ")),
+                  trailing: Text(allParcours[index].titreEvents.join(", ")),
                 );
               },
             ),

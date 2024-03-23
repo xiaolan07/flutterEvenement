@@ -1,18 +1,16 @@
 class ParcoursModel {
-  String
-      id; // Un identifiant unique pour le parcours, utile si vous utilisez une base de données
+  String id; // Un identifiant unique pour le parcours
   String titre;
   String description;
   String pseudo;
-  List<int>
-      indexEvents; // Stocke les identifiants (ou titres) des événements sélectionnés
+  List<String> titreEvents; // Stocke les titres des événements sélectionnés
 
   ParcoursModel({
     this.id = '',
     required this.titre,
     required this.description,
     required this.pseudo,
-    required this.indexEvents,
+    required this.titreEvents,
   });
 
   // Convertir un objet Parcours en Map pour faciliter l'enregistrement dans une base de données
@@ -21,7 +19,8 @@ class ParcoursModel {
       'titre': titre,
       'description': description,
       'pseudo': pseudo,
-      'evenementsIds': indexEvents,
+      'titreEvents':
+          titreEvents, // Le champ doit correspondre à la structure de votre JSON
     };
   }
 
@@ -32,7 +31,7 @@ class ParcoursModel {
       titre: json['titre'] as String,
       description: json['description'] as String,
       pseudo: json['pseudo'] as String,
-      indexEvents: List<int>.from(json['indexEvents']),
+      titreEvents: List<String>.from(json['titreEvents']),
     );
   }
 }
