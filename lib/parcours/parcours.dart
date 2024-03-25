@@ -98,13 +98,13 @@ class _ParcoursState extends State<Parcours> {
                     child: ListTile(
                       title: Text(allParcours[index].titre),
                       subtitle: Text(allParcours[index].description),
-                      trailing: IconButton(
-                        icon: Icon(Icons.favorite_border),
-                        onPressed: () {
-                          // Ajoutez ici la logique pour gérer le bouton "J'aime"
-                          Color c1 = Colors.red;
-                        },
-                      ),
+                      // trailing: IconButton(
+                      //   icon: Icon(Icons.favorite_border),
+                      //   onPressed: () {
+                      //     // Ajoutez ici la logique pour gérer le bouton "J'aime"
+                      //     Color c1 = Colors.red;
+                      //   },
+                      // ),
                     ),
                   ),
                 );
