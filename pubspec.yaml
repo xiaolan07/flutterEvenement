@@ -78,7 +78,9 @@ flutter:
    - images/fb.png
    - images/x.png
    - images/lkdin.png
-  #   - images/a_dot_ham.jpeg
+   - images/newBG.jpg  
+   - images/newBG1.png 
+   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -3,7 +3,7 @@ import 'package:flutter_dev/service/firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-import 'model/eventModel.dart';
+import '../model/eventModel.dart';
 
 class EventDetailsPage extends StatefulWidget {
   final EventModel event;
@@ -109,7 +109,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                           onTap: () => launch('tel:${widget.event.telephone}'),
                           child: Text(
                             widget.event.telephone,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -232,9 +232,14 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                               .setNote(widget.event.indexEvent, rating.toInt())
                               .then((_) {
                             setState(() {
-                              _currentRating = rating
-                                  as int; // Mettre à jour l'état avec la nouvelle note
-
+                              _currentRating = rating.toInt();
+                                   // Mettre à jour l'état avec la nouvelle note
+                              ScaffoldMessenger.of(context).showSnackBar(
+                               SnackBar(
+                                  content: Text("Vous avez donné ${rating.toInt()} à cet événement."),
+                                duration: const Duration(seconds: 2), // Durée d'affichage du Snackbar
+                              ),
+                            );
                               print("Note mise à jour avec succès.");
                             });
                           }).catchError((error) {
@@ -248,7 +253,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                   SizedBox(height: 16),
                   Text(
                     "Note moyenne : ${_currentRating}/5", // Affiche la note actuelle
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
               )

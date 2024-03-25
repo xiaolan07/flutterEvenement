@@ -101,4 +101,37 @@ class FirestoreService {
       return 'Ville non trouvée';
     }
   }
+
+Future<void> saveParcours(String titre, String description, List<String> selectedEvents, String pseudo) async {
+  final DatabaseReference parcours = parcoursBD.ref();
+
+  // Obtenir le nombre actuel de parcours pour générer la prochaine clé
+  DataSnapshot snapshot = await parcours.get();
+  int nextKey = snapshot.exists ? snapshot.children.length : 0;
+
+  // Créez un objet ParcoursModel à partir des paramètres
+  final ParcoursModel parcoursMdl = ParcoursModel(
+    id : nextKey.toString(),
+    titre: titre,
+    description: description,
+    pseudo: pseudo,
+    titreEvents: selectedEvents,
+  );
+
+   // Convertir l'objet ParcoursModel en Map
+  final Map<String, dynamic> parcoursData = parcoursMdl.toMap();
+
+  try {
+    // Générer un nouvel ID pour le parcours ou utiliser un existant si vous mettez à jour un parcours
+   // final newParcoursRef = database.child("parcours").push();
+
+    // Sauvegarder les données dans votre base de données
+    await parcours.child(nextKey.toString()).set(parcoursData);
+    
+    print("Parcours ajouté");
+  } catch (e) {
+    print("Erreur lors de l'ajout du parcours : $e");
+  }
+}
+
 }

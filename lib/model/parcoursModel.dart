@@ -16,6 +16,7 @@ class ParcoursModel {
   // Convertir un objet Parcours en Map pour faciliter l'enregistrement dans une base de données
   Map<String, dynamic> toMap() {
     return {
+      'id':id,
       'titre': titre,
       'description': description,
       'pseudo': pseudo,

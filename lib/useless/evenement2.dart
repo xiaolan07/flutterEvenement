@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dev/service/firestore.dart';
-import 'model/eventModel.dart';
-import 'eventDetailsPage.dart';
+import '../model/eventModel.dart';
+import '../events/eventDetailsPage.dart';
 
 class Evenement2 extends StatefulWidget {
   const Evenement2({Key? key}) : super(key: key);

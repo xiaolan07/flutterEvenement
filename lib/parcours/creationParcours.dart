@@ -1,4 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dev/main.dart';
 import 'package:flutter_dev/model/eventModel.dart';
 import 'package:flutter_dev/service/firestore.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
@@ -12,7 +15,7 @@ class CreationParcours extends StatefulWidget {
 
 class _CreationParcoursState extends State<CreationParcours> {
 
-  final firestoreService = FirestoreService();
+  final FirestoreService _firestoreService = FirestoreService();
   List<EventModel> allEvents = [];
   final TextEditingController _titreController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -22,6 +25,12 @@ class _CreationParcoursState extends State<CreationParcours> {
   bool _titreError = false;
   bool _descriptionError = false;
   bool _pseudoError = false;
+
+  final FirebaseDatabase databaseRef = FirebaseDatabase.instanceFor(
+  app: Firebase.app(), // Obtient l'instance par défaut de l'application Firebase
+  databaseURL: 'https://parcours-e37c3-default-rtdb.firebaseio.com/', // Votre URL de base de données
+);
+
 
 
 
@@ -34,7 +43,7 @@ class _CreationParcoursState extends State<CreationParcours> {
 
   void _loadEvents() async {
     setState(() => _isLoading = true);
-    var events = await firestoreService.getAllEvents();
+    var events = await _firestoreService.getAllEvents();
     setState(() {
       allEvents = events;
       _isLoading = false;
@@ -151,17 +160,21 @@ Widget build(BuildContext context) {
                                 },
                               );
                             } else {
-                            // Tous les champs sont remplis, procédez à la sauvegarde
-                            // Insérez ici la logique de sauvegarde de votre parcours
-                             // La description n'est pas vide, procédez à la sauvegarde
-                              // Insérez ici la logique de sauvegarde de votre parcours
-                              // Exemple de sauvegarde du parcours
-                              // await firestoreService.saveParcours(
+                              //   _firestoreService.saveParcours(
                               //   _titreController.text,
                               //   _descriptionController.text,
-                              //   _selectedEvents,
+                              //  _selectedEvents,
+                              //  _pseudoController.text, 
                               // );
-                            Navigator.pop(context); // Retour à l'écran précédent après la sauvegarde
+                              _firestoreService.saveParcours(_titreController.text, _descriptionController.text, _selectedEvents, _pseudoController.text);
+                              // Afficher un Snackbar pour notifier l'utilisateur
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Votre parcours a bien été enregistré."),
+                                duration: Duration(seconds: 2), // Durée d'affichage du Snackbar
+                              ),
+                            );
+                            Navigator.pop(context, true); // Retour à l'écran précédent après la sauvegarde
                           }
                         },
                       icon: Icon(Icons.check), // Icône de vérification
@@ -194,5 +207,23 @@ Widget build(BuildContext context) {
     ),
   );
 }
+
+Future<void> insertParcoursWithIntegerKey(String titre, String description, List<String> selectedEvents, String pseudo) async {
+  DatabaseReference parcoursRef = databaseRef.ref();
+
+  // Obtenir le nombre actuel de parcours pour générer la prochaine clé
+  DataSnapshot snapshot = await parcoursRef.get();
+  int nextKey = snapshot.exists ? snapshot.children.length : 0;
+
+  // Utiliser cette clé pour insérer le nouveau parcours
+  await parcoursRef.child(nextKey.toString()).set({
+    'titre': titre,
+    'description': description,
+    'titreEvents': selectedEvents,
+    'pseudo': pseudo,
+  });
+}
+
+
 
 }
