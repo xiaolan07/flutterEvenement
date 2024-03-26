@@ -70,6 +70,46 @@ class FirestoreService {
     });
   }
 
+  Future<void> setTauxRemplissage(int idEvent, double taux) async {
+    String eventId = "${idEvent}";
+    DatabaseReference eventRef = FirebaseDatabase.instance.ref("/$eventId");
+    // Mise à jour de la propriété 'note' pour l'événement spécifique
+    await eventRef.update({
+      "tauxRemplissage": taux,
+    }).then((_) {
+      print("Note mise à jour avec succès.");
+    }).catchError((error) {
+      print("Erreur lors de la mise à jour de la note: $error");
+    });
+  }
+
+  Future<double> getTauxRemplissage(int idEvent) async {
+    String eventId = "$idEvent";
+    DatabaseReference eventRef = FirebaseDatabase.instance.ref("/$eventId");
+    try {
+      DatabaseEvent eventSnapshot =
+          await eventRef.child("tauxRemplissage").once();
+      if (eventSnapshot.snapshot.exists) {
+        num? value = eventSnapshot.snapshot.value as num?;
+        if (value != null) {
+          double tauxRemplissage = value.toDouble();
+          print("tauxRemplissage avec succès: $tauxRemplissage");
+          return tauxRemplissage;
+        } else {
+          print("Aucune tauxRemplissage trouvée pour l'événement $eventId");
+          return 0.0;
+        }
+      } else {
+        print("Aucune tauxRemplissage trouvée pour l'événement $eventId");
+        return 0.0;
+      }
+    } catch (error) {
+      print("Erreur lors de la récupération de la tauxRemplissage: $error");
+      throw Exception(
+          "Erreur lors de la récupération de la tauxRemplissage: $error");
+    }
+  }
+
   Future<int> getNote(int idEvent) async {
     String eventId = "$idEvent";
     DatabaseReference eventRef = FirebaseDatabase.instance.ref("/$eventId");
@@ -102,36 +142,36 @@ class FirestoreService {
     }
   }
 
-Future<void> saveParcours(String titre, String description, List<String> selectedEvents, String pseudo) async {
-  final DatabaseReference parcours = parcoursBD.ref();
+  Future<void> saveParcours(String titre, String description,
+      List<String> selectedEvents, String pseudo) async {
+    final DatabaseReference parcours = parcoursBD.ref();
 
-  // Obtenir le nombre actuel de parcours pour générer la prochaine clé
-  DataSnapshot snapshot = await parcours.get();
-  int nextKey = snapshot.exists ? snapshot.children.length : 0;
+    // Obtenir le nombre actuel de parcours pour générer la prochaine clé
+    DataSnapshot snapshot = await parcours.get();
+    int nextKey = snapshot.exists ? snapshot.children.length : 0;
 
-  // Créez un objet ParcoursModel à partir des paramètres
-  final ParcoursModel parcoursMdl = ParcoursModel(
-    id : nextKey.toString(),
-    titre: titre,
-    description: description,
-    pseudo: pseudo,
-    titreEvents: selectedEvents,
-  );
+    // Créez un objet ParcoursModel à partir des paramètres
+    final ParcoursModel parcoursMdl = ParcoursModel(
+      id: nextKey.toString(),
+      titre: titre,
+      description: description,
+      pseudo: pseudo,
+      titreEvents: selectedEvents,
+    );
 
-   // Convertir l'objet ParcoursModel en Map
-  final Map<String, dynamic> parcoursData = parcoursMdl.toMap();
+    // Convertir l'objet ParcoursModel en Map
+    final Map<String, dynamic> parcoursData = parcoursMdl.toMap();
 
-  try {
-    // Générer un nouvel ID pour le parcours ou utiliser un existant si vous mettez à jour un parcours
-   // final newParcoursRef = database.child("parcours").push();
+    try {
+      // Générer un nouvel ID pour le parcours ou utiliser un existant si vous mettez à jour un parcours
+      // final newParcoursRef = database.child("parcours").push();
 
-    // Sauvegarder les données dans votre base de données
-    await parcours.child(nextKey.toString()).set(parcoursData);
-    
-    print("Parcours ajouté");
-  } catch (e) {
-    print("Erreur lors de l'ajout du parcours : $e");
+      // Sauvegarder les données dans votre base de données
+      await parcours.child(nextKey.toString()).set(parcoursData);
+
+      print("Parcours ajouté");
+    } catch (e) {
+      print("Erreur lors de l'ajout du parcours : $e");
+    }
   }
-}
-
 }

@@ -16,6 +16,8 @@ class EventDetailsPage extends StatefulWidget {
 
 class _EventDetailsPageState extends State<EventDetailsPage> {
   int _currentRating = 0;
+  double? _currentTaux = 0;
+  double _tauxPresent = 0;
 
   @override
   void initState() {
@@ -24,6 +26,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
 
     // get le update note
     fetchEventNote();
+    fetchEventTaux();
   }
 
   final FirestoreService _firestoreService = FirestoreService();
@@ -34,6 +37,16 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
     });
   }
 
+  void fetchEventTaux() async {
+    double? fetchedTaux =
+        await _firestoreService.getTauxRemplissage(widget.event.indexEvent);
+    if (fetchedTaux != null) {
+      setState(() {
+        _tauxPresent = fetchedTaux;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final FirestoreService _firestoreService = FirestoreService();
@@ -41,8 +54,11 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
     final String datesDisplay = hasMultipleDates
         ? "De: ${widget.event.dates.first} à: ${widget.event.dates.last}"
         : "Date: ${widget.event.dates.first}";
-    // TEST: setNote 2 pour idEvent 0
-    //_firestoreService.setNote("0", 2);
+
+    void _onSliderChangeEnd(double value) {
+      print("value: $value");
+      _firestoreService.setTauxRemplissage(widget.event.indexEvent, value);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -69,7 +85,8 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                   Expanded(
                     child: InkWell(
                       onTap: () async {
-                        final url = 'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(widget.event.adresse)}';
+                        final url =
+                            'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(widget.event.adresse)}';
                         if (await canLaunch(url)) {
                           await launch(url);
                         } else {
@@ -131,6 +148,28 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                     return const Text('Image not available');
                   },
                 ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Slider(
+                    value: _tauxPresent,
+                    min: 0,
+                    max: 100,
+                    divisions: 100,
+                    label: _tauxPresent.round().toString(),
+                    onChanged: (double value) {
+                      setState(() {
+                        _tauxPresent = value;
+                      });
+                    },
+                    onChangeEnd: _onSliderChangeEnd,
+                  ),
+                  Text(
+                    'Taux de remplissement: ${_tauxPresent.round()}' + '%',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
               ),
               SizedBox(height: 16.0),
               Text(
@@ -233,13 +272,16 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                               .then((_) {
                             setState(() {
                               _currentRating = rating.toInt();
-                                   // Mettre à jour l'état avec la nouvelle note
+                              // Mettre à jour l'état avec la nouvelle note
                               ScaffoldMessenger.of(context).showSnackBar(
-                               SnackBar(
-                                  content: Text("Vous avez donné ${rating.toInt()} à cet événement."),
-                                duration: const Duration(seconds: 2), // Durée d'affichage du Snackbar
-                              ),
-                            );
+                                SnackBar(
+                                  content: Text(
+                                      "Vous avez donné ${rating.toInt()} à cet événement."),
+                                  duration: const Duration(
+                                      seconds:
+                                          2), // Durée d'affichage du Snackbar
+                                ),
+                              );
                               print("Note mise à jour avec succès.");
                             });
                           }).catchError((error) {
@@ -253,7 +295,8 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                   SizedBox(height: 16),
                   Text(
                     "Note moyenne : ${_currentRating}/5", // Affiche la note actuelle
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
               )

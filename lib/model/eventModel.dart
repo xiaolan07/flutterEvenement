@@ -14,24 +14,25 @@ class EventModel {
   final String telephone;
   final int note;
   final int indexEvent;
+  final double tauxRemplissage;
 
-  EventModel({
-    required this.adresse,
-    required this.dates,
-    required this.titreFr,
-    required this.descriptionFr,
-    required this.imageUrl,
-    required this.thematiques,
-    required this.keywords,
-    required this.geolocalisation,
-    required this.id,
-    required this.ville,
-    required this.descriptionLongue,
-    required this.lien,
-    required this.telephone,
-    required this.note,
-    required this.indexEvent,
-  });
+  EventModel(
+      {required this.adresse,
+      required this.dates,
+      required this.titreFr,
+      required this.descriptionFr,
+      required this.imageUrl,
+      required this.thematiques,
+      required this.keywords,
+      required this.geolocalisation,
+      required this.id,
+      required this.ville,
+      required this.descriptionLongue,
+      required this.lien,
+      required this.telephone,
+      required this.note,
+      required this.indexEvent,
+      required this.tauxRemplissage});
 
   // Convertit une Map en une instance d'Event
   factory EventModel.fromJson(Map<dynamic, dynamic> json, int index) {
@@ -59,6 +60,7 @@ class EventModel {
           ' Pas de numero de téléphone 😢',
       note: json["note"] as int? ?? 0,
       indexEvent: index,
+      tauxRemplissage: json["tauxRemplissage"] as double? ?? 0.0,
     );
   }
 }
