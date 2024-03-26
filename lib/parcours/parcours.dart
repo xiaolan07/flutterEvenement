@@ -39,21 +39,25 @@ class _ParcoursState extends State<Parcours> {
       appBar: AppBar(
         title: const Text('Parcours'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () async {
-              // code pour créer un nouveau parcours
-               final result = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CreationParcours()),
-              );
+           IconButton(
+      icon: const Icon(Icons.add),
+      onPressed: () async {
+        final result = await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CreationParcours()),
+        );
 
-              // Si 'result' est 'true', rechargez la liste des parcours
-              if (result == true) {
-                _loadParcours(); // Recharge les données
-              }
-            },
-          ),
+        if (result == true) {
+          _loadParcours(); // Recharge les données
+        }
+      },
+    ),
+    IconButton(
+      icon: const Icon(Icons.refresh),
+      onPressed: () {
+        _loadParcours(); // Fonction pour recharger les données des parcours
+      },
+    ),
         ],
       ),
       body: Column(
@@ -72,7 +76,7 @@ class _ParcoursState extends State<Parcours> {
             },
             child: Text('Créer un parcours'),
           ),
-          Text(
+          const Text(
             'Voir tout les parcours',
             style: TextStyle(
               fontSize: 24.0,
@@ -97,16 +101,27 @@ class _ParcoursState extends State<Parcours> {
                   child: Card(
                     child: ListTile(
                       title: Text(allParcours[index].titre),
-                      subtitle: Text(allParcours[index].description),
-                      // trailing: IconButton(
-                      //   icon: Icon(Icons.favorite_border),
-                      //   onPressed: () {
-                      //     // Ajoutez ici la logique pour gérer le bouton "J'aime"
-                      //     Color c1 = Colors.red;
-                      //   },
-                      // ),
+                      subtitle: Text(
+                        allParcours[index].description,
+                        maxLines: 2, // Limite le texte à 2 lignes
+                        overflow: TextOverflow.ellipsis, // Ajoute des points de suspension si le texte est trop long
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min, // Important pour s'assurer que la Row ne prend pas trop d'espace
+                        children: [
+                          Icon(Icons.favorite, color: Colors.red), // Icône de cœur en rouge
+                          SizedBox(width: 4), // Un petit espace entre l'icône et le nombre de "J'aime"
+                          Text(
+                            '${allParcours[index].nbJaime}',
+                            style: const TextStyle(
+                              fontSize: 15,
+                            ),
+                            ), // Le nombre de "J'aime"
+                        ],
+                      ),
                     ),
                   ),
+
                 );
               },
             ),

@@ -166,7 +166,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                     onChangeEnd: _onSliderChangeEnd,
                   ),
                   Text(
-                    'Taux de remplissement: ${_tauxPresent.round()}' + '%',
+                    'Mettez le taux de remplissage: ${_tauxPresent.round()}' + '%',
                     style: TextStyle(fontSize: 20),
                   ),
                 ],

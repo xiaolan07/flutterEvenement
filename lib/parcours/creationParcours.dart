@@ -26,6 +26,8 @@ class _CreationParcoursState extends State<CreationParcours> {
   bool _descriptionError = false;
   bool _pseudoError = false;
 
+  final int _nbJaime = 1;
+
   final FirebaseDatabase databaseRef = FirebaseDatabase.instanceFor(
   app: Firebase.app(), // Obtient l'instance par défaut de l'application Firebase
   databaseURL: 'https://parcours-e37c3-default-rtdb.firebaseio.com/', // Votre URL de base de données
@@ -166,7 +168,7 @@ Widget build(BuildContext context) {
                               //  _selectedEvents,
                               //  _pseudoController.text, 
                               // );
-                              _firestoreService.saveParcours(_titreController.text, _descriptionController.text, _selectedEvents, _pseudoController.text);
+                              _firestoreService.saveParcours(_titreController.text, _descriptionController.text, _selectedEvents, _pseudoController.text, _nbJaime);
                               // Afficher un Snackbar pour notifier l'utilisateur
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

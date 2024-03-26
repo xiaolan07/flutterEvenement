@@ -4,6 +4,7 @@ class ParcoursModel {
   String description;
   String pseudo;
   List<String> titreEvents; // Stocke les titres des événements sélectionnés
+  int nbJaime;
 
   ParcoursModel({
     this.id = '',
@@ -11,6 +12,7 @@ class ParcoursModel {
     required this.description,
     required this.pseudo,
     required this.titreEvents,
+    required this.nbJaime, 
   });
 
   // Convertir un objet Parcours en Map pour faciliter l'enregistrement dans une base de données
@@ -22,6 +24,7 @@ class ParcoursModel {
       'pseudo': pseudo,
       'titreEvents':
           titreEvents, // Le champ doit correspondre à la structure de votre JSON
+      'nbLike' : nbJaime,
     };
   }
 
@@ -33,6 +36,8 @@ class ParcoursModel {
       description: json['description'] as String,
       pseudo: json['pseudo'] as String,
       titreEvents: List<String>.from(json['titreEvents']),
+      nbJaime: json['nbJaime'] as int? ?? 0,
+
     );
   }
 }

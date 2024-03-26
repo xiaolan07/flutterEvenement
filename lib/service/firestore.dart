@@ -54,6 +54,43 @@ class FirestoreService {
     }
     return parcoursList;
   }
+ 
+
+   Future<void> incrementNbJaime(String id) async {
+    final DatabaseReference parcours = parcoursBD.ref().child(id);
+   // DatabaseReference parcours = ref.child(id);
+    DatabaseEvent parcoursSnapshot = await parcours.child("nbJaime").once();
+
+    if (parcoursSnapshot.snapshot.exists && parcoursSnapshot.snapshot.value != null) {
+      int currentLikes = parcoursSnapshot.snapshot.value as int;
+      await parcours.update({
+        "nbJaime": currentLikes + 1,
+      });
+    } else {
+      await parcours.update({
+        "nbJaime": 1,
+      });
+    }
+  }
+
+    Future<int> getNbLike(String id) async {
+    final DatabaseReference parcours = parcoursBD.ref().child(id);
+   // DatabaseReference parcours = ref.child(id);
+    DatabaseEvent parcoursSnapshot = await parcours.child("nbJaime").once();
+
+    if (parcoursSnapshot.snapshot.exists && parcoursSnapshot.snapshot.value != null) {
+      return parcoursSnapshot.snapshot.value as int;
+    } else {
+      return 0;
+    }
+  }
+
+    Future<void> setNbLike(String id, int nbJaime) async {
+    final DatabaseReference parcours = parcoursBD.ref().child(id);
+    await parcours.update({
+      "nbJaime": nbJaime,
+    });
+  }
 
   Future<void> setNote(int idEvent, int note) async {
     String eventId = "${idEvent}";
@@ -143,7 +180,7 @@ class FirestoreService {
   }
 
   Future<void> saveParcours(String titre, String description,
-      List<String> selectedEvents, String pseudo) async {
+      List<String> selectedEvents, String pseudo, int nbJaime) async {
     final DatabaseReference parcours = parcoursBD.ref();
 
     // Obtenir le nombre actuel de parcours pour générer la prochaine clé
@@ -157,6 +194,7 @@ class FirestoreService {
       description: description,
       pseudo: pseudo,
       titreEvents: selectedEvents,
+      nbJaime: nbJaime,
     );
 
     // Convertir l'objet ParcoursModel en Map
