@@ -17,7 +17,10 @@ class _Evenement1State extends State<Evenement1> {
   final firestoreService = FirestoreService();
   List<EventModel> allEvents = [];
   List<EventModel> filteredEvents = [];
+  List<EventModel> triEvents = [];
+
   String searchQuery = "";
+
   final TextEditingController _textEditingController = TextEditingController();
   DateTime? selectedDate;
   bool _isLoading = false;
@@ -101,6 +104,23 @@ class _Evenement1State extends State<Evenement1> {
     }
   }
 
+  bool isSortedAscending = true;
+  void _triEventsByTaux() {
+    if (isSortedAscending) {
+      // Tri en ordre croissant
+      allEvents.sort((a, b) => a.tauxRemplissage.compareTo(b.tauxRemplissage));
+    } else {
+      // Tri en ordre décroissant
+      allEvents.sort((a, b) => b.tauxRemplissage.compareTo(a.tauxRemplissage));
+    }
+    // Inverser l'état du tri pour le prochain clic
+    isSortedAscending = !isSortedAscending;
+    // Mettre à jour l'interface utilisateur pour refléter le nouveau tri
+    setState(() {
+      allEvents = allEvents;
+    });
+  }
+
   void _showFilterOptions() {
     showModalBottomSheet(
       context: context,
@@ -152,8 +172,16 @@ class _Evenement1State extends State<Evenement1> {
                     // Afficher un dialogue pour filtrer par mots-clés
                     _showFilterByKeywordsDialog();
                   },
-                  child: Text('Mots-clés'),
+                  child: const Text('Mots-clés'),
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    // trier les events par le taux
+                    _triEventsByTaux();
+                  },
+                  child: const Text('Tri '),
+                ),
+                const SizedBox(height: 10),
               ],
             ),
           ),
