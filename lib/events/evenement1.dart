@@ -29,6 +29,7 @@ class _Evenement1State extends State<Evenement1> {
   void initState() {
     super.initState();
     _loadEvents();
+    //fetchAllEventsTaux();
   }
 
   void _toggleView() {
@@ -46,6 +47,43 @@ class _Evenement1State extends State<Evenement1> {
       _isLoading = false;
     });
   }
+
+  var _currentTaux;
+
+  final FirestoreService _firestoreService = FirestoreService();
+
+  Future<void> fetchAllEventsTaux() async {
+    Map<int, double?> fetchedTauxMap =
+        await _firestoreService.getAllEventsTaux();
+    setState(() {
+      for (var event in allEvents) {
+        event.tauxRemplissage =
+            fetchedTauxMap[event.indexEvent] ?? event.tauxRemplissage;
+      }
+    });
+  }
+
+  void goToEventPage(EventModel event) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => EventDetailsPage(event: event)),
+    );
+
+    if (result == true) {
+      _loadEvents();
+      fetchAllEventsTaux();
+    }
+  }
+
+  /*void fetchEventTaux() async {
+    double? fetchedTaux =
+        await _firestoreService.getTauxRemplissage(widget.event.indexEvent);
+    if (fetchedTaux != null) {
+      setState(() {
+        _tauxPresent = fetchedTaux;
+      });
+    }
+  }*/
 
   void _getByVilleAndKeywordsAndThematique(String query) {
     setState(() {
@@ -296,23 +334,24 @@ class _Evenement1State extends State<Evenement1> {
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            subtitle: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                    'Date: ${event.dates.isNotEmpty ? event.dates.first : 'Date non disponible'}'),
-                                // Text('Mots clés: ${event.keywords.join(', ')}', style: TextStyle(fontWeight: FontWeight.bold)),
-                                // Text('Thèmes: ${event.thematiques.join(', ')}', style: TextStyle(color: Colors.blue)),
+                                    'Date: ${event.dates.isNotEmpty ? event.dates.first : "Date non disponible"}'),
+                                Expanded(
+                                  child: Text(
+                                    event.tauxRemplissage != null &&
+                                            event.tauxRemplissage > 0
+                                        ? 'Taux de remplissement: ${event.tauxRemplissage}%'
+                                        : 'Taux de remplissement à saisir',
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ),
                               ],
                             ),
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      EventDetailsPage(event: event),
-                                ),
-                              );
+                              goToEventPage(event);
                             },
                           );
                         },

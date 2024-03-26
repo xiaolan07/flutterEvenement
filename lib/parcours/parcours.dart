@@ -39,25 +39,25 @@ class _ParcoursState extends State<Parcours> {
       appBar: AppBar(
         title: const Text('Parcours'),
         actions: [
-           IconButton(
-      icon: const Icon(Icons.add),
-      onPressed: () async {
-        final result = await Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CreationParcours()),
-        );
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreationParcours()),
+              );
 
-        if (result == true) {
-          _loadParcours(); // Recharge les données
-        }
-      },
-    ),
-    IconButton(
-      icon: const Icon(Icons.refresh),
-      onPressed: () {
-        _loadParcours(); // Fonction pour recharger les données des parcours
-      },
-    ),
+              if (result == true) {
+                _loadParcours(); // Recharge les données
+              }
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              _loadParcours(); // Fonction pour recharger les données des parcours
+            },
+          ),
         ],
       ),
       body: Column(
@@ -83,7 +83,7 @@ class _ParcoursState extends State<Parcours> {
               fontFamily: 'Roboto',
               fontWeight: FontWeight.bold,
             ),
-            ),
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: allParcours.length,
@@ -92,11 +92,11 @@ class _ParcoursState extends State<Parcours> {
                   onTap: () {
                     // Ajoutez ici la logique pour afficher les détails du parcours
                     Navigator.push(
-                      context, 
-                      MaterialPageRoute(
-                        builder: (context) => ParcoursDetailsPage(parcours: allParcours[index]),
-                      )
-                    );
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ParcoursDetailsPage(parcours: allParcours[index]),
+                        ));
                   },
                   child: Card(
                     child: ListTile(
@@ -104,24 +104,28 @@ class _ParcoursState extends State<Parcours> {
                       subtitle: Text(
                         allParcours[index].description,
                         maxLines: 2, // Limite le texte à 2 lignes
-                        overflow: TextOverflow.ellipsis, // Ajoute des points de suspension si le texte est trop long
+                        overflow: TextOverflow
+                            .ellipsis, // Ajoute des points de suspension si le texte est trop long
                       ),
                       trailing: Row(
-                        mainAxisSize: MainAxisSize.min, // Important pour s'assurer que la Row ne prend pas trop d'espace
+                        mainAxisSize: MainAxisSize
+                            .min, // Important pour s'assurer que la Row ne prend pas trop d'espace
                         children: [
-                          Icon(Icons.favorite, color: Colors.red), // Icône de cœur en rouge
-                          SizedBox(width: 4), // Un petit espace entre l'icône et le nombre de "J'aime"
+                          Icon(Icons.favorite,
+                              color: Colors.red), // Icône de cœur en rouge
+                          SizedBox(
+                              width:
+                                  4), // Un petit espace entre l'icône et le nombre de "J'aime"
                           Text(
                             '${allParcours[index].nbJaime}',
                             style: const TextStyle(
                               fontSize: 15,
                             ),
-                            ), // Le nombre de "J'aime"
+                          ), // Le nombre de "J'aime"
                         ],
                       ),
                     ),
                   ),
-
                 );
               },
             ),

@@ -14,7 +14,7 @@ class EventModel {
   final String telephone;
   final int note;
   final int indexEvent;
-  final double tauxRemplissage;
+  late  double tauxRemplissage;
 
   EventModel(
       {required this.adresse,
@@ -60,8 +60,8 @@ class EventModel {
           ' Pas de numero de téléphone 😢',
       note: json["note"] as int? ?? 0,
       indexEvent: index,
-      tauxRemplissage: (json["tauxRemplissage"] is int) ? (json["tauxRemplissage"] as int).toDouble() : json["tauxRemplissage"] as double? ?? 0.0,
-      //tauxRemplissage: json["tauxRemplissage"] as double? ?? 0.0,
+      //tauxRemplissage: (json["tauxRemplissage"] is int) ? (json["tauxRemplissage"] as int).toDouble() : json["tauxRemplissage"] as double? ?? 0.0,
+      tauxRemplissage: json["tauxRemplissage"] as double? ?? 0.0,
     );
   }
 }

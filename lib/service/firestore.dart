@@ -54,14 +54,33 @@ class FirestoreService {
     }
     return parcoursList;
   }
- 
 
-   Future<void> incrementNbJaime(String id) async {
+  Future<Map<int, double?>> getAllEventsTaux() async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
+    DatabaseEvent eventSnapshot = await ref.limitToFirst(30).once();
+
+    Map<int, double?> eventsTaux = {};
+    if (eventSnapshot.snapshot.exists && eventSnapshot.snapshot.value is Map) {
+      Map<dynamic, dynamic> eventsMap =
+          eventSnapshot.snapshot.value as Map<dynamic, dynamic>;
+      eventsMap.forEach((key, value) {
+        if (value is Map && value['tauxRemplissage'] is double) {
+          int indexEvent = int.tryParse(key) ?? -1;
+          double tauxRemplissage = value['tauxRemplissage'];
+          eventsTaux[indexEvent] = tauxRemplissage;
+        }
+      });
+    }
+    return eventsTaux;
+  }
+
+  Future<void> incrementNbJaime(String id) async {
     final DatabaseReference parcours = parcoursBD.ref().child(id);
-   // DatabaseReference parcours = ref.child(id);
+    // DatabaseReference parcours = ref.child(id);
     DatabaseEvent parcoursSnapshot = await parcours.child("nbJaime").once();
 
-    if (parcoursSnapshot.snapshot.exists && parcoursSnapshot.snapshot.value != null) {
+    if (parcoursSnapshot.snapshot.exists &&
+        parcoursSnapshot.snapshot.value != null) {
       int currentLikes = parcoursSnapshot.snapshot.value as int;
       await parcours.update({
         "nbJaime": currentLikes + 1,
@@ -73,19 +92,20 @@ class FirestoreService {
     }
   }
 
-    Future<int> getNbLike(String id) async {
+  Future<int> getNbLike(String id) async {
     final DatabaseReference parcours = parcoursBD.ref().child(id);
-   // DatabaseReference parcours = ref.child(id);
+    // DatabaseReference parcours = ref.child(id);
     DatabaseEvent parcoursSnapshot = await parcours.child("nbJaime").once();
 
-    if (parcoursSnapshot.snapshot.exists && parcoursSnapshot.snapshot.value != null) {
+    if (parcoursSnapshot.snapshot.exists &&
+        parcoursSnapshot.snapshot.value != null) {
       return parcoursSnapshot.snapshot.value as int;
     } else {
       return 0;
     }
   }
 
-    Future<void> setNbLike(String id, int nbJaime) async {
+  Future<void> setNbLike(String id, int nbJaime) async {
     final DatabaseReference parcours = parcoursBD.ref().child(id);
     await parcours.update({
       "nbJaime": nbJaime,
