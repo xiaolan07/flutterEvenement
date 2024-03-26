@@ -35,7 +35,6 @@ class FirestoreService {
     DatabaseReference ref = parcoursBD.ref();
     DatabaseEvent event = await ref.limitToFirst(30).once();
     List<ParcoursModel> parcoursList = [];
-
     if (event.snapshot.exists) {
       final data = event.snapshot.value;
       if (data is List) {
@@ -58,7 +57,6 @@ class FirestoreService {
   Future<Map<int, double?>> getAllEventsTaux() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref();
     DatabaseEvent eventSnapshot = await ref.limitToFirst(30).once();
-
     Map<int, double?> eventsTaux = {};
     if (eventSnapshot.snapshot.exists && eventSnapshot.snapshot.value is Map) {
       Map<dynamic, dynamic> eventsMap =
@@ -72,6 +70,26 @@ class FirestoreService {
       });
     }
     return eventsTaux;
+  }
+
+  Future<Map<int, int?>> getAllNbLike() async {
+    final DatabaseReference ref = parcoursBD.ref();
+    DatabaseEvent parcoursSnapshot = await ref.child("nbJaime").once();
+    Map<int, int?> parcoursNbLike = {};
+
+    if (parcoursSnapshot.snapshot.exists &&
+        parcoursSnapshot.snapshot.value is Map) {
+      Map<dynamic, dynamic> parcoursMap =
+          parcoursSnapshot.snapshot.value as Map<dynamic, dynamic>;
+      parcoursMap.forEach((key, value) {
+        if (value is Map && value['nbJaime'] is int) {
+          int indexParcours = int.tryParse(key) ?? -1;
+          int nbJaime = value['nbJaime'];
+          parcoursNbLike[indexParcours] = nbJaime;
+        }
+      });
+    }
+    return parcoursNbLike;
   }
 
   Future<void> incrementNbJaime(String id) async {
@@ -115,8 +133,6 @@ class FirestoreService {
   Future<void> setNote(int idEvent, int note) async {
     String eventId = "${idEvent}";
     DatabaseReference eventRef = FirebaseDatabase.instance.ref("/$eventId");
-    print("idEvent" + eventId);
-    print(note);
     // Mise à jour de la propriété 'note' pour l'événement spécifique
     await eventRef.update({
       "note": note,

@@ -1,5 +1,4 @@
 //import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dev/service/firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -29,7 +28,6 @@ class _Evenement1State extends State<Evenement1> {
   void initState() {
     super.initState();
     _loadEvents();
-    //fetchAllEventsTaux();
   }
 
   void _toggleView() {
@@ -63,6 +61,7 @@ class _Evenement1State extends State<Evenement1> {
     });
   }
 
+  // pour écouter les changements de données de taux, il va MAJ lors de retourner sur la page parcours
   void goToEventPage(EventModel event) async {
     final result = await Navigator.push(
       context,
@@ -74,16 +73,6 @@ class _Evenement1State extends State<Evenement1> {
       fetchAllEventsTaux();
     }
   }
-
-  /*void fetchEventTaux() async {
-    double? fetchedTaux =
-        await _firestoreService.getTauxRemplissage(widget.event.indexEvent);
-    if (fetchedTaux != null) {
-      setState(() {
-        _tauxPresent = fetchedTaux;
-      });
-    }
-  }*/
 
   void _getByVilleAndKeywordsAndThematique(String query) {
     setState(() {

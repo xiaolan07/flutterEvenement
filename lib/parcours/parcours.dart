@@ -33,6 +33,31 @@ class _ParcoursState extends State<Parcours> {
     print(allParcours.length);
   }
 
+  final FirestoreService _firestoreService = FirestoreService();
+
+  // get le nbLike modifié
+  Future<void> fetchAllParcoursNbLike() async {
+    Map<int, int?> fetchedNbLikeMap = await _firestoreService.getAllNbLike();
+    setState(() {
+      for (var parcours in allParcours) {
+        parcours.nbJaime = fetchedNbLikeMap[parcours.id] ?? parcours.nbJaime;
+      }
+    });
+  }
+
+  // pour écouter les changements de données de nbLike, il va MAJ lors de retourner sur la page parcours
+  void goToParcoursPage(ParcoursModel parcours) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ParcoursDetailsPage(parcours: parcours)),
+    );
+    if (result == true) {
+      _loadParcours();
+      fetchAllParcoursNbLike();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,12 +116,7 @@ class _ParcoursState extends State<Parcours> {
                 return InkWell(
                   onTap: () {
                     // Ajoutez ici la logique pour afficher les détails du parcours
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ParcoursDetailsPage(parcours: allParcours[index]),
-                        ));
+                    goToParcoursPage(allParcours[index]);
                   },
                   child: Card(
                     child: ListTile(
