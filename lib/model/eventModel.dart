@@ -60,8 +60,8 @@ class EventModel {
           ' Pas de numero de téléphone 😢',
       note: json["note"] as int? ?? 0,
       indexEvent: index,
-      //tauxRemplissage: (json["tauxRemplissage"] is int) ? (json["tauxRemplissage"] as int).toDouble() : json["tauxRemplissage"] as double? ?? 0.0,
-      tauxRemplissage: json["tauxRemplissage"] as double? ?? 0.0,
+      tauxRemplissage: (json["tauxRemplissage"] is int) ? (json["tauxRemplissage"] as int).toDouble() : json["tauxRemplissage"] as double? ?? 0.0,
+      //tauxRemplissage: json["tauxRemplissage"] as double? ?? 0.0,
     );
   }
 }
