@@ -306,7 +306,7 @@ class _Evenement1State extends State<Evenement1> {
                   child: TextField(
                     controller: _textEditingController,
                     decoration: InputDecoration(
-                      labelText: 'Rechercher par adresse',
+                      labelText: 'Rechercher',
                       suffixIcon: IconButton(
                         icon: Icon(Icons.search),
                         onPressed: () => _getByVilleAndKeywordsAndThematique(
