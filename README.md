@@ -5,7 +5,7 @@ A new Flutter project.
 # Pré requis 
 Pour éviter les bugs et autres erreurs de compatibilité, il est conseillé de démarrer le projet sur un émulateur Android avec une version minimale de 21. Les différentes bibliothèques, y compris Google Maps, ont été configurées pour être compatibles avec Android 21.
 
-Pour des raisons de tests on ne chrage que 30 evenements sur les 6000. Si vous souhaitez augumentez le nombre de il vous suffit de le modifié dans la méthode getALLEvents du fichier firestore.
+Afin de faciliter les tests et d'optimiser les performances lors du développement, l'application est actuellement configurée pour charger uniquement 30 événements sur les 6000 disponibles. Cette configuration permet une manipulation plus rapide et plus fluide de l'application durant les phases de test. Si vous souhaitez augumentez le nombre il vous suffit de le modifié dans la méthode getALLEvents du fichier firestore.
 
 
 ## Configuration de Firebase
